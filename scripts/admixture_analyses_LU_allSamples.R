@@ -138,7 +138,6 @@ p4 <- plotdat_k4 %>%
   facet_grid (. ~ Location, scales="free", space="free")
 
 ## stitch the admixture plots together
-## save plot with 1200x600 w/h dimension; save as 'LU_admixture_allSamples_sampFiltd-3'
 p234 <- ggarrange(p2, p3, p4, common.legend = FALSE, nrow = 3)
 annotate_figure(p234,
                 top = text_grob("MYLU admixture estimates for 2-4 populations"))
