@@ -17,9 +17,9 @@ theme_devon <- function () {
 
 ## import data from ngsAdmix
 ## 1. file paths for import
-k2_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUcommon_k2.qopt"
-k3_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUcommon_k3.qopt"
-k4_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUcommon_k4.qopt"
+k2_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUall_ANGSDregions_k2.qopt"
+k3_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUall_ANGSDregions_k3.qopt"
+k4_angsd <- "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/NGSadmix/LUall_ANGSDregions_k4.qopt"
 
 ## 2. import sample labels to data:
 meta <- read_delim(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/PLINK/mylu_proper.fam",
