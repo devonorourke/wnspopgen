@@ -48,6 +48,10 @@ conda install -c bioconda perl-bioperl perl-io-all perl-bit-vector perl-dbd-sqli
 ./Build augustus
 ```
 
+# Maker work
+
+**need to update this into subsections**
+
 Once maker was done, we followed Darren Card's workflow to capture mRNA's with decent confidence to train SNAP and Augustus.
   - see: http://darencard.net/blog/2017-05-16-maker-genome-annotation/
 
@@ -272,7 +276,7 @@ I used a custom script to get this information. See `aed_legnth_compviz.R` for m
 
 
 
-
+# Unused section
 
 For transcriptome assembly of Myotis lucifugus ilium tissue
 ## downloaded RNAseq data from:
