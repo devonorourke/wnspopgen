@@ -1,44 +1,47 @@
-Want to download a newer protein fasta for all mammals?
-See this post: http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc136
-
-Recent example of paper for genome pub: https://academic.oup.com/gigascience/article/7/10/giy116/5104371#127032238
-
-D. Card's wiki about running Maker: https://gist.github.com/darencard/bb1001ac1532dd4225b030cf0cd61ce2
+# Helpful resources
+See these links for some additional info that might be useful:
+- Want to download a newer protein fasta for all mammals? Subset something? See this post: http://biopython.org/DIST/docs/tutorial/Tutorial.html#htoc136 
+- Recent example of paper for genome pub: https://academic.oup.com/gigascience/article/7/10/giy116/5104371#127032238
+- D. Card's wiki about running Maker: https://gist.github.com/darencard/bb1001ac1532dd4225b030cf0cd61ce2
   - see these scripts when Darren is referring to merging things from RepeatMasker: https://www.animalgenome.org/bioinfo/resources/manuals/RepeatMasker.html
 
-.....
 
-1. unmasked all the sites from the mylu_hic_rails.fasta file because they were carried over from the original Myoluc2 genome.
-  - this became the '/scratch/dro49/myluwork/annotation/input_files/mylu_hic_rails_noMasks.fa' file
+# Overview
 
-2. Used that fasta file to run RepeatModeler to generate the custom bat library (fasta format).
+Prior to starting I unmasked all the sites from the updated genome (mylu_hic_rails.fasta file) because they were carried over from the original Myoluc2 genome. The problem was the updated genome included masking information from Myoluc2, but parts were joined/removed in a way that made retaining that information unsuitable. Thus this became the '/scratch/dro49/myluwork/annotation/input_files/mylu_hic_rails_noMasks.fa' file which was used as input for masking. 
+
+## section on RepeatModeler and RepeatMasker
+I used that fasta file to run RepeatModeler to generate the custom bat library (fasta format).
   - note about doing this in GenSAS? Or, just rerun in RepeatMaker locally, specifying the library path!
+  - summarize commands for both (scripts in /scratch/dro49/myluwork/repeatModels)
 
-3. Used the resulting GFF as complex library mask in Maker. Added the protein fasta, transcript mylu wing fasta, and transcript fastas for Myotis brandtii as altest evidence into Maker. Ran Maker. Maker needed some help getting to the finish (see installation woes below)
-
+In general, Maker v-3.02.beta was used to annotate the geonome by providing:
+  - the combined RepeatMasker GFF files (using DFAM mammals and custom library from RepeatModeler), 
+  - the protein fasta (update this section with info on it's creation)
+  - transcriptome assembly mylu wing (update section with commands on where data came from, how ORP was used)
+  - transcriptome assemblies for Myotis brandtii as altest evidence (note same ORP protocol used; mention SRAs for each read set)
+  
+# Installation woes
+The global Maker installation was failing because of Perl dependencies and RepeatMasker not functioning properly. As a result, I had to:
+- make an update to the ~/.condarc file to specify to install new env/pkg data to `/scratch/dro49/conda` instead of `$HOME/.conda`. This was because our $HOME directory was filling up with too many packages. 
+- Installed Maker. Go to their site (https://www.yandell-lab.org/software/maker.html), enter your info, download the binary, unpack. 
+- Set up a Conda environment for Maker installation to work. Do not add in Augustus with this or Maker with this Conda environment - you just want the Perl files; otherwise you'll be knee deep in error messages...  
 ```
-## installation woes...
-## had to make an update to the ~/.condarc file to specify to install new env/pkg data to /scratch/dro49/conda instead of $HOME/.conda
 conda create -n maker3env python=3.7
 conda activate /scratch/dro49/maker3env
 conda install -c bioconda perl-bioperl perl-io-all perl-bit-vector perl-dbd-sqlite perl-inline-c perl-perl-unsafe-signals perl-want perl-forks perl-dbi perl-lwp-simple perl-dbd-pg trf
-**leave the augustus version alone; otherwise you'll be knee deep in Perl conflicts**
-  - built with libgcc-7.2.0, giflib-5.1.4, glib-2.63.1
-
-!!!!!!! Notice we're not installing Maker with Conda. Just installing Perl depndencies with Conda!!!!!!!
-
-## now can install just Maker, because other executables are called from command line
+```
+- Now we install Maker _with an active conda environment_:
+```
+## be sure to have invoked: `conda activate maker3env`
 ## go to maker's root directory, then to ./src:
 ./Build install
-
 ## this works, but gives this warning:
 `Possible precedence issue with control flow operator at Bio/DB/IndexedBase.pm line 805.`
-
-Apparently the issue is benign?
-  - https://github.com/Ensembl/ensembl-vep/issues/75
+## Apparently the warning/issue is benign? see https://github.com/Ensembl/ensembl-vep/issues/75
 ```
+- I tried installing Augustus locally but kept getting conflicts. What worked for me was to build a copy of Augustus within Maker using the Maker script which downloads a local copy and installs it within Maker (while the same `maker3env` conda environment is active):
 
-## Tried installing augustus locally, with the conda environment already loaded, so that the current version of Augustus would have the right versions of all the dependent libraries when compiling... (this was a problem with earlier attempts)
 ```
 # ensure 'conda activate maker3env' done...
 # within ./src:
