@@ -16,13 +16,13 @@ theme_devon <- function () {
 }
 
 ## data import
-mylu_k2 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUallSamps.2.Q", 
+mylu_k2 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.2.Q", 
                       col_names = FALSE) %>% 
   rename(pop1=`X1`, pop2=`X2`)
-mylu_k3 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUallSamps.3.Q", 
+mylu_k3 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.3.Q", 
                       col_names = FALSE) %>% 
   rename(pop1=`X1`, pop2=`X2`, pop3=`X3`)
-mylu_k4 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUallSamps.4.Q", 
+mylu_k4 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.4.Q", 
                       col_names = FALSE) %>% 
   rename(pop1=`X1`, pop2=`X2`, pop3=`X3`, pop4=`X4`)
 
@@ -138,6 +138,7 @@ p4 <- plotdat_k4 %>%
   facet_grid (. ~ Location, scales="free", space="free")
 
 ## stitch the admixture plots together
+## save plot with 1200x600 w/h dimension; save as 'LU_admixture_allSamples'
 p234 <- ggarrange(p2, p3, p4, common.legend = FALSE, nrow = 3)
 annotate_figure(p234,
                 top = text_grob("MYLU admixture estimates for 2-4 populations"))
