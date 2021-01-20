@@ -4,27 +4,15 @@ library(ggpubr)
 ## Script used to generate admixture plots
 ## written 21 Jan 2020 by Devon O'Rourke
 
-# theme function for custom plot style:
-theme_devon <- function () { 
-  theme_bw(base_size=12, base_family="Avenir") %+replace% 
-    theme(
-      panel.background  = element_blank(),
-      plot.background = element_rect(fill="transparent", colour=NA), 
-      legend.background = element_rect(fill="transparent", colour=NA),
-      legend.key = element_rect(fill="transparent", colour=NA)
-    )
-}
-
 ## data import
-mylu_k2 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.2.Q", 
-                      col_names = FALSE) %>% 
-  rename(pop1=`X1`, pop2=`X2`)
-mylu_k3 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.3.Q", 
-                      col_names = FALSE) %>% 
-  rename(pop1=`X1`, pop2=`X2`, pop3=`X3`)
-mylu_k4 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUpruned_forAdmixture.4.Q", 
-                      col_names = FALSE) %>% 
-  rename(pop1=`X1`, pop2=`X2`, pop3=`X3`, pop4=`X4`)
+mylu_k2 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUadmixture.2.Q", 
+                      col_names = c('pop1', 'pop2'))
+
+mylu_k3 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUadmixture.3.Q", 
+                      col_names = c('pop1', 'pop2', 'pop3'))
+
+mylu_k4 <- read_table(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/ADMIXTURE/LUadmixture.4.Q",
+                      col_names = c('pop1', 'pop2', 'pop3', 'pop4'))
 
 mylu_names <- read_delim(file = "https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/PLINK/mylu_proper.fam", 
                          col_names = FALSE,
@@ -33,6 +21,7 @@ mylu_names <- read_delim(file = "https://raw.githubusercontent.com/devonorourke/
   rename(Pop=`X1`, Indiv=`X2`) %>% 
   mutate(Name=paste(Pop, Indiv, sep = "-"))
 
+## create data frames for plots
 data_k2 <- cbind(mylu_k2, mylu_names) %>% 
   pivot_longer(., cols = c(pop1, pop2),
                names_to = "Ancestry")
@@ -41,14 +30,15 @@ data_k3 <- cbind(mylu_k3, mylu_names) %>%
   pivot_longer(., cols = c(pop1, pop2, pop3),
                names_to = "Ancestry")
 
-data_k4 <- cbind(mylu_k4, mylu_names) %>% 
+data_k4 <- cbind(mylu_k4, mylu_names) %>%
   pivot_longer(., cols = c(pop1, pop2, pop3, pop4),
                names_to = "Ancestry")
 
 
 ## import and filter metadata for MYLU only
 sample_metadata <- read_csv(file="https://raw.githubusercontent.com/devonorourke/wnspopgen/master/data/metadata/resolved_sample_metadata.csv")
-mylu_metadat <- sample_metadata %>% filter(SpeciesPfx=="LU")
+mylu_metadat <- sample_metadata %>% 
+  filter(libPrepAlias %in% mylu_names$Indiv)
 mylu_metadat$Location <- str_replace(mylu_metadat$Location, "-", "\n")
 
 plotdat_k2 <- merge(data_k2, mylu_metadat, by.x='Name', by.y='analysisAlias')
@@ -68,7 +58,7 @@ plotdat_k4$LocationNumber <- ifelse(plotdat_k4$Ancestry=="pop1", plotdat_k4$Loca
 ## plot K2
 ## reorder x-axis to group data by Locations in similar states
 plotdat_k2$Location <- factor(plotdat_k2$Location,
-                              levels = c("NY\nWilliams","NY\nHailesCave", "NY\nunknown",
+                              levels = c("NY\nWilliamsMine","NY\nHailesCave",
                                          "VT\nStockbridge", "VT\nAeolus","VT\nNewfane",
                                          "NH\nCharlestown", "NH\nMilford", 
                                          "MA\nChester", "MA\nPrinceton", "MA\nPepperell", "MA\nLincoln"))
@@ -79,7 +69,6 @@ p2 <- plotdat_k2 %>%
   geom_bar(stat="identity", 
            width = 0.92) +
   scale_fill_manual(values = c("dodgerblue1", "sienna1")) +
-  theme_devon() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         legend.position = "right",
@@ -93,7 +82,7 @@ p2 <- plotdat_k2 %>%
 ## plot K3
 ## reorder x-axis to group data by Locations in similar states
 plotdat_k3$Location <- factor(plotdat_k3$Location,
-                              levels = c("NY\nWilliams","NY\nHailesCave", "NY\nunknown",
+                              levels = c("NY\nWilliamsMine","NY\nHailesCave",
                                          "VT\nStockbridge", "VT\nAeolus","VT\nNewfane",
                                          "NH\nCharlestown", "NH\nMilford", 
                                          "MA\nChester", "MA\nPrinceton", "MA\nPepperell", "MA\nLincoln"))
@@ -104,7 +93,6 @@ p3 <- plotdat_k3 %>%
   geom_bar(stat="identity", 
            width = 0.92) +
   scale_fill_manual(values = c("yellow3", "orchid3", "palegreen4")) +
-  theme_devon() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         legend.position = "right",
@@ -118,7 +106,7 @@ p3 <- plotdat_k3 %>%
 ## plot K4
 ## reorder x-axis to group data by Locations in similar states
 plotdat_k4$Location <- factor(plotdat_k4$Location,
-                              levels = c("NY\nWilliams","NY\nHailesCave", "NY\nunknown",
+                              levels = c("NY\nWilliamsMine","NY\nHailesCave",
                                          "VT\nStockbridge", "VT\nAeolus","VT\nNewfane",
                                          "NH\nCharlestown", "NH\nMilford", 
                                          "MA\nChester", "MA\nPrinceton", "MA\nPepperell", "MA\nLincoln"))
@@ -128,7 +116,6 @@ p4 <- plotdat_k4 %>%
   geom_bar(stat="identity", 
            width = 0.92) +
   scale_fill_manual(values = c("dodgerblue1", "red3", "orange3", "springgreen4")) +
-  theme_devon() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank(),
         legend.position = "right",
@@ -142,3 +129,6 @@ p4 <- plotdat_k4 %>%
 p234 <- ggarrange(p2, p3, p4, common.legend = FALSE, nrow = 3)
 annotate_figure(p234,
                 top = text_grob("MYLU admixture estimates for 2-4 populations"))
+ggsave("~/github/wnspopgen/figures_tables/admixture_k2-4.png", width = 24, height = 16, units="cm", dpi=150)
+ggsave("~/github/wnspopgen/figures_tables/admixture_k2-4.pdf", width = 24, height = 16, units="cm", dpi=300)
+  ## can manually fix the few labels that get cut off (WilliamsMine, Newfane, Milford, Lincoln)
