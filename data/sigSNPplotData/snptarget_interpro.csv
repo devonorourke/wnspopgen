@@ -1,0 +1,4 @@
+chrom,rangetype,start,stop,interproID
+scaffold12,iprscan,282138,282317,IPR001628|IPR013088
+scaffold5,iprscan,102793026,102793441,IPR026320
+scaffold5,iprscan,78679	79785,IPR004000
