@@ -1,4 +1,7 @@
-chrom,rangetype,start,stop,interproID,geneName
-scaffold12,iprscan,282138,282317,IPR001628|IPR013088,RXRA
-scaffold5,iprscan,102793026,102793441,IPR026320,PRR14
-scaffold5,iprscan,78679,79785,IPR004000,ACTBL2
+chrom,CDSstart,CDSstop,ProSitePatternsID,geneName
+scaffold5,52,62,PS00406,ACTBL2
+scaffold5,103,115,PS01132,ACTBL2
+scaffold5,355,363,PS00432,ACTBL2
+scaffold12,203,278,PS51030,RXRA
+scaffold12,353,584,PS51843,RXRA
+scaffold5,629,761,PS50250,PRR14
