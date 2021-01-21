@@ -1,5 +1,5 @@
 chrom,start,coordinate,geneName,mutationType
-scaffold3,47150530,scaffold3:47150530,intergenic,intergenic
+scaffold3,47150530,scaffold3:47150530,intergenic
 scaffold5,78815,scaffold5:78815	ACTBL2,missense
 scaffold5,79290,scaffold5:79290	ACTBL2,synonymous
 scaffold5,79294,scaffold5:79294	ACTBL2,missense
